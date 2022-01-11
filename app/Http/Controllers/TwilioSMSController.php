@@ -44,7 +44,7 @@ class TwilioSMSController extends Controller
             $user->google2fa_secret = $secKey;
             $user->save();
         }
-
+        
         $data['google2fa_url'] = $google2fa->getQRCodeUrl(
             $user->name,
             $user->email,
