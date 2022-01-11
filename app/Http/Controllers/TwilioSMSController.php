@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 use Twilio\Rest\Client;
 use PragmaRX\Google2FAQRCode\Google2FA;
+use Sonata\GoogleAuthenticator\GoogleAuthenticator;
+use Sonata\GoogleAuthenticator\GoogleQrUrl;
 
 
 
@@ -11,6 +13,39 @@ use PragmaRX\Google2FAQRCode\Google2FA;
 
 class TwilioSMSController extends Controller
 {
+    public function checkCode($code){
+        //https://github.com/sonata-project/GoogleAuthenticator/blob/3.x/sample/example.php
+        $g = new GoogleAuthenticator();
+        $user = \App\Models\User::first();
+        if($user->google2fa_secret){
+            $secret =    $user->google2fa_secret;
+        } else {
+            $secret = $g->generateSecret();
+            $user->google2fa_secret = $secret;
+            $user->save();
+        }
+        if ($g->checkCode($secret, $code, 0)) {
+            echo $code." : YES";
+        } else {
+            echo $code." : NO";
+        }
+    }
+
+    public function my() {
+        $g = new GoogleAuthenticator();
+        $user = \App\Models\User::first();
+        if($user->google2fa_secret){
+            $secret =    $user->google2fa_secret;
+        } else {
+            $secret = $g->generateSecret();
+            $user->google2fa_secret = $secret;
+            $user->save();
+        }
+        $data['code'] =  $g->getCode($secret);
+        $data['url'] =  GoogleQrUrl::generate('chregu', $secret, 'GoogleAuthenticatorExample');
+        return view("my")->with($data);
+    }
+
     public function index()
     {
         $receiverNumber = "+923353134197";

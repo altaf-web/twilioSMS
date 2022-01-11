@@ -21,3 +21,6 @@ Route::get('/', function () {
 Route::get("sendSMS",[TwilioSMSController::class,'index']);
 Route::get("/twoFa",[TwilioSMSController::class,'twoFa']);
 Route::get("/test",[TwilioSMSController::class,'verify']);
+
+Route::get("my",[TwilioSMSController::class,'my']);
+Route::get("check/{code}",[TwilioSMSController::class,'checkCode']);
