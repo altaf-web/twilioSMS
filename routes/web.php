@@ -19,3 +19,5 @@ Route::get('/', function () {
 });
 
 Route::get("sendSMS",[TwilioSMSController::class,'index']);
+Route::get("/twoFa",[TwilioSMSController::class,'twoFa']);
+Route::get("/test",[TwilioSMSController::class,'verify']);
